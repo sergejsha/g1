@@ -27,14 +27,9 @@ interface GithubOverviewService {
     }
 
     sealed class State {
-
         object Empty : State()
         class Error(val err: Throwable) : State()
-
-        data class Content(
-            val lastPage: Int,
-            val repos: List<Repo>
-        ) : State()
+        data class Content(val lastPage: Int, val repos: List<Repo>) : State()
     }
 
     val state: Observable<State>
@@ -68,29 +63,24 @@ internal class DefaultGithubOverviewService(
         command.accept(GithubOverviewService.Command.LoadNextPage)
     }
 
-    private fun loadNextPage(currentState: GithubOverviewService.State): Single<GithubOverviewService.State> =
-        when (currentState) {
-            is GithubOverviewService.State.Content -> {
+    private fun loadNextPage(currentState: GithubOverviewService.State): Single<GithubOverviewService.State> {
+        val source = when (currentState) {
+            is GithubOverviewService.State.Content ->
                 githubOverviewSource
                     .getRepos(currentState.lastPage + 1)
                     .map { it.appendTo(currentState) }
-                    .onErrorReturn { err: Throwable ->
-                        err.printStackTrace()
-                        GithubOverviewService.State.Error(err)
-                    }
-                    .subscribeOn(Schedulers.io())
-            }
-            else -> {
+            else ->
                 githubOverviewSource
                     .getRepos(1)
                     .map { it.toContent() }
-                    .onErrorReturn { err: Throwable ->
-                        err.printStackTrace()
-                        GithubOverviewService.State.Error(err)
-                    }
-                    .subscribeOn(Schedulers.io())
-            }
         }
+        return source
+            .onErrorReturn { err: Throwable ->
+                err.printStackTrace()
+                GithubOverviewService.State.Error(err)
+            }
+            .subscribeOn(Schedulers.io())
+    }
 
     fun dispose() {
         disposables.dispose()

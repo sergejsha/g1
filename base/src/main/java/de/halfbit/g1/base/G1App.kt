@@ -8,7 +8,7 @@ import magnet.bind
 import magnet.getSingle
 import magnetx.AppExtension
 
-const val APPLICATION = "APPLICATION"
+const val APPLICATION = "application"
 
 class G1App : Application(), ScopeOwner {
 

@@ -12,18 +12,9 @@ interface GalleryView {
     }
 
     sealed class State {
-
         object Loading : State()
-
-        data class Content(
-            val lastPage: Int,
-            val repos: List<Repo>
-        ) : State()
-
-        class Error(
-            val message: String
-        ) : State()
-
+        class Content(val repos: List<Repo>) : State()
+        class Error(val message: String) : State()
     }
 
     val state: Consumer<State>

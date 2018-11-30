@@ -8,6 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 internal interface GithubDetailEndpoint {
+
     @GET("repos/{resource}")
     fun getRepoDetail(@Path(value = "resource", encoded = true) resource: String): Single<JsonRepo>
 }
@@ -29,5 +30,4 @@ internal data class JsonRepo(
 }
 
 @Instance(type = GithubDetailEndpoint::class)
-internal fun provideGithubDetailEndpoint(retrofit: Retrofit)
-        : GithubDetailEndpoint = retrofit.create()
+internal fun provideGithubDetailEndpoint(retrofit: Retrofit): GithubDetailEndpoint = retrofit.create()

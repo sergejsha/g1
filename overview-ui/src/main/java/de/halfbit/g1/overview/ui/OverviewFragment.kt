@@ -29,7 +29,7 @@ class OverviewFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         scope = activity.createSubscope {
-            bind(checkNotNull(view) { "Fragment must have a view" }, ROOT)
+            bind(checkNotNull(view) { "Fragment must create a view" }, ROOT)
             bind(CompositeDisposable())
             viewManager = getSingle()
         }

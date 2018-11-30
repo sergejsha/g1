@@ -8,6 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 internal interface GithubOverviewEndpoint {
+
     @GET("search/repositories?q=language:java+language:kotlin+topic:android&sort=stars&order=desc")
     fun getRepos(@Query("page") page: Int): Single<JsonRepos>
 }
@@ -32,5 +33,4 @@ internal data class JsonRepos(
 }
 
 @Instance(type = GithubOverviewEndpoint::class)
-internal fun provideGithubOverviewEndpoint(retrofit: Retrofit)
-        : GithubOverviewEndpoint = retrofit.create()
+internal fun provideGithubOverviewEndpoint(retrofit: Retrofit): GithubOverviewEndpoint = retrofit.create()

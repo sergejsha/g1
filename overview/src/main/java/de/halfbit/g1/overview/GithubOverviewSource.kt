@@ -13,18 +13,17 @@ internal class DefaultGithubOverviewSource(
 ) : GithubOverviewSource {
 
     override fun getRepos(page: Int): Single<List<Repo>> =
-        endpoint.getRepos(page)
-            .map { it.items.map { jsonRepo -> jsonRepo.toRepo() } }
+        endpoint.getRepos(page).map { it.items.map { jsonRepo -> jsonRepo.toRepo() } }
 
 }
 
-private const val UNKNOWN = "---"
+private const val EMPTY = "---"
 
 private fun JsonRepos.JsonRepo.toRepo(): Repo =
     Repo(
         name = name,
         author = owner.login,
-        description = description ?: UNKNOWN,
-        language = language ?: UNKNOWN,
+        description = description ?: EMPTY,
+        language = language ?: EMPTY,
         stars = stargazers_count ?: 0
     )

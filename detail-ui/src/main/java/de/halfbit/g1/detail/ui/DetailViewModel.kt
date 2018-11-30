@@ -1,6 +1,7 @@
 package de.halfbit.g1.detail.ui
 
 import de.halfbit.g1.detail.GithubDetailService
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.ofType
@@ -25,21 +26,20 @@ internal class DefaultDetailViewModel(
 
     override fun bind(view: DetailView, disposables: CompositeDisposable) {
 
-        disposables += githubDetailService.state
+        val loading = githubDetailService.state
             .ofType<GithubDetailService.State.Processing>()
             .map { DetailView.State.Loading }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(view.state)
 
-        disposables += githubDetailService.state
+        val error = githubDetailService.state
             .ofType<GithubDetailService.State.Error>()
             .map { DetailView.State.Error(it.err.message ?: it.err.toString()) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(view.state)
 
-        disposables += githubDetailService.state
+        val content = githubDetailService.state
             .ofType<GithubDetailService.State.Content>()
             .map { DetailView.State.Content(repo = it.repo) }
+
+        disposables += Observable
+            .merge(loading, error, content)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(view.state)
 

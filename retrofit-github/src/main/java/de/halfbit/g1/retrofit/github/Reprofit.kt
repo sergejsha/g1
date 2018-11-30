@@ -15,7 +15,10 @@ internal fun provideRetrofit(): Retrofit =
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .client(
             OkHttpClient.Builder()
-                .addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC })
+                .addInterceptor(
+                    HttpLoggingInterceptor().apply {
+                        level = HttpLoggingInterceptor.Level.BASIC
+                    })
                 .build()
         )
         .build()
