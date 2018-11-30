@@ -26,12 +26,9 @@ interface GithubDetailService {
     class LoadDetailCommand(val resource: String)
 
     sealed class State {
-        object Loading : State()
+        object Processing : State()
+        class Content(val repo: RepoDetail) : State()
         class Error(val err: Throwable) : State()
-
-        data class Content(
-            val repo: RepoDetail
-        ) : State()
     }
 
     val state: Observable<State>
@@ -43,28 +40,21 @@ internal class DefaultGithubDetailService(
     private val githubDetailSource: GithubDetailSource
 ) : GithubDetailService {
 
-    override val state = BehaviorRelay
-        .create<GithubDetailService.State>()
-        .toSerialized()
-
-    override val command = PublishRelay
-        .create<GithubDetailService.LoadDetailCommand>()
-        .toSerialized()
+    override val state = BehaviorRelay.create<GithubDetailService.State>().toSerialized()
+    override val command = PublishRelay.create<GithubDetailService.LoadDetailCommand>().toSerialized()
 
     private val disposables = CompositeDisposable()
 
     init {
 
-        disposables += command
-            .map { GithubDetailService.State.Loading }
-            .subscribe(state)
+        val loading = command
+            .map { GithubDetailService.State.Processing }
 
-        disposables += command
+        val content = command
             .flatMapSingle { loadResourceDetail(it.resource) }
-            .onErrorResumeNext { err: Throwable ->
-                err.printStackTrace()
-                Observable.just(GithubDetailService.State.Error(err))
-            }
+
+        disposables += Observable
+            .merge(loading, content)
             .subscribe(state)
 
     }
@@ -73,6 +63,10 @@ internal class DefaultGithubDetailService(
         githubDetailSource
             .getRepoDetail(resource)
             .map { GithubDetailService.State.Content(repo = it) as GithubDetailService.State }
+            .onErrorReturn { err: Throwable ->
+                err.printStackTrace()
+                GithubDetailService.State.Error(err)
+            }
             .subscribeOn(Schedulers.io())
 
     fun dispose() {

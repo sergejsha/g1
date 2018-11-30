@@ -65,7 +65,7 @@ internal class LazyPager(
                 if (position == RecyclerView.NO_POSITION) {
                     return
                 }
-                val positionToTriggerPageLoading = itemCount - 1 - 12
+                val positionToTriggerPageLoading = itemCount - 1 - 16
                 if (position >= positionToTriggerPageLoading) {
                     if (!loading) {
                         loading = true

@@ -63,10 +63,6 @@ internal class DefaultGithubOverviewService(
             .ofType<GithubOverviewService.Command.LoadNextPage>()
             .withLatestFrom(state)
             .flatMapSingle { loadNextPage(it.second) }
-            .onErrorResumeNext { err: Throwable ->
-                err.printStackTrace()
-                Observable.just(GithubOverviewService.State.Error(err))
-            }
             .subscribe(state)
 
         command.accept(GithubOverviewService.Command.LoadNextPage)
@@ -78,12 +74,20 @@ internal class DefaultGithubOverviewService(
                 githubOverviewSource
                     .getRepos(currentState.lastPage + 1)
                     .map { it.appendTo(currentState) }
+                    .onErrorReturn { err: Throwable ->
+                        err.printStackTrace()
+                        GithubOverviewService.State.Error(err)
+                    }
                     .subscribeOn(Schedulers.io())
             }
             else -> {
                 githubOverviewSource
                     .getRepos(1)
                     .map { it.toContent() }
+                    .onErrorReturn { err: Throwable ->
+                        err.printStackTrace()
+                        GithubOverviewService.State.Error(err)
+                    }
                     .subscribeOn(Schedulers.io())
             }
         }

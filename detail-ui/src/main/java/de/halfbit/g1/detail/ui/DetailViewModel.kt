@@ -26,7 +26,7 @@ internal class DefaultDetailViewModel(
     override fun bind(view: DetailView, disposables: CompositeDisposable) {
 
         disposables += githubDetailService.state
-            .ofType<GithubDetailService.State.Loading>()
+            .ofType<GithubDetailService.State.Processing>()
             .map { DetailView.State.Loading }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(view.state)
