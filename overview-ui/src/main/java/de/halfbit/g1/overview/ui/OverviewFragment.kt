@@ -10,6 +10,7 @@ import de.halfbit.g1.base.MainUiFragmentFactory
 import de.halfbit.g1.base.createSubscope
 import de.halfbit.g1.overview.ui.gallery.GalleryView
 import de.halfbit.g1.overview.ui.gallery.GalleryViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import magnet.Instance
 import magnet.Scope
@@ -17,6 +18,7 @@ import magnet.bind
 import magnet.getSingle
 
 internal const val ROOT = "root"
+internal const val MAIN_THREAD_SCHEDULER = "main-thread-scheduler"
 
 class OverviewFragment : Fragment() {
 
@@ -30,6 +32,7 @@ class OverviewFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         scope = activity.createSubscope {
             bind(checkNotNull(view) { "Fragment must create a view" }, ROOT)
+            bind(AndroidSchedulers.mainThread(), MAIN_THREAD_SCHEDULER)
             bind(CompositeDisposable())
             viewManager = getSingle()
         }

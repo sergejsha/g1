@@ -14,7 +14,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="Repository"/>
+            android:text="@string/repository"/>
 
     <TextView
             android:id="@+id/description"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/textView1"
             app:layout_constraintTop_toBottomOf="@+id/textView1"
-            android:text="Language" android:layout_marginTop="8dp"/>
+            android:text="@string/language" android:layout_marginTop="8dp"/>
 
     <TextView
             android:id="@+id/textView4"
@@ -43,7 +43,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="@+id/textView3"
             app:layout_constraintTop_toBottomOf="@+id/textView3"
-            android:text="Stars"/>
+            android:text="@string/stars"/>
 
     <TextView
             android:id="@+id/textView5"
@@ -52,7 +52,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="@+id/textView4"
             app:layout_constraintTop_toBottomOf="@+id/textView4"
-            android:text="Forks"/>
+            android:text="@string/forks"/>
 
     <TextView
             android:id="@+id/textView6"
@@ -61,7 +61,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="@+id/textView5"
             app:layout_constraintTop_toBottomOf="@+id/textView5"
-            android:text="Subscribers"/>
+            android:text="@string/subscribers"/>
 
     <TextView
             android:id="@+id/textView7"
@@ -70,7 +70,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="@+id/textView6"
             app:layout_constraintTop_toBottomOf="@+id/textView6"
-            android:text="Issues"/>
+            android:text="@string/issues"/>
 
     <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier2"

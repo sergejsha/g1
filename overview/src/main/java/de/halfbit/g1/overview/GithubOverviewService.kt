@@ -28,8 +28,8 @@ interface GithubOverviewService {
 
     sealed class State {
         object Empty : State()
-        class Error(val err: Throwable) : State()
         data class Content(val lastPage: Int, val repos: List<Repo>) : State()
+        class Error(val err: Throwable) : State()
     }
 
     val state: Observable<State>

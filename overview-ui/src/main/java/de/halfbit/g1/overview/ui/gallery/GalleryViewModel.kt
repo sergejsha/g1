@@ -1,11 +1,13 @@
 package de.halfbit.g1.overview.ui.gallery
 
 import de.halfbit.g1.overview.GithubOverviewService
+import de.halfbit.g1.overview.ui.MAIN_THREAD_SCHEDULER
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
+import magnet.Classifier
 import magnet.Instance
 
 interface GalleryViewModel {
@@ -13,8 +15,9 @@ interface GalleryViewModel {
 }
 
 @Instance(type = GalleryViewModel::class)
-internal class ReposGalleryViewModel(
-    private val githubOverviewService: GithubOverviewService
+internal class DefaultGalleryViewModel(
+    private val githubOverviewService: GithubOverviewService,
+    @Classifier(MAIN_THREAD_SCHEDULER) private val mainThreadScheduler: Scheduler
 ) : GalleryViewModel {
 
     override fun bind(view: GalleryView, disposables: CompositeDisposable) {
@@ -34,7 +37,7 @@ internal class ReposGalleryViewModel(
 
         disposables += Observable
             .merge(content, error)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(mainThreadScheduler)
             .subscribe(view.state)
 
     }

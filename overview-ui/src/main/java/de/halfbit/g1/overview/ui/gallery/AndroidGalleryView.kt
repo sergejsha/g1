@@ -1,11 +1,13 @@
 package de.halfbit.g1.overview.ui.gallery
 
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxrelay2.PublishRelay
 import de.halfbit.g1.overview.Repo
+import de.halfbit.g1.overview.ui.R
 import de.halfbit.g1.overview.ui.ROOT
 import io.reactivex.Observable
 import io.reactivex.functions.Consumer
@@ -29,7 +31,8 @@ internal class DefaultAndroidGalleryView(
 
     override val nextPageRequests = PublishRelay.create<Unit>().toSerialized()
 
-    private val recycler = rootView as RecyclerView
+    private val recycler = rootView.findViewById<RecyclerView>(R.id.recycler)
+    private val progress = rootView.findViewById<ProgressBar>(R.id.progress)
     private val lazyPager = LazyPager(nextPageRequests)
 
     init {
@@ -42,6 +45,11 @@ internal class DefaultAndroidGalleryView(
     }
 
     override fun showContent(repos: List<Repo>) {
+        if (recycler.visibility != View.VISIBLE) {
+            recycler.visibility = View.VISIBLE
+            progress.visibility = View.GONE
+        }
+
         val adapter = recycler.adapter as? GalleryItemAdapter ?: galleryItemAdapter
         adapter.setRepos(repos)
         lazyPager.loading = false
@@ -65,7 +73,7 @@ internal class LazyPager(
                 if (position == RecyclerView.NO_POSITION) {
                     return
                 }
-                val positionToTriggerPageLoading = itemCount - 1 - 16
+                val positionToTriggerPageLoading = itemCount - 1 - 18
                 if (position >= positionToTriggerPageLoading) {
                     if (!loading) {
                         loading = true

@@ -22,8 +22,7 @@ internal data class JsonRepos(
         val owner: JsonOwner,
         val description: String?,
         val language: String?,
-        val stargazers_count: Int?,
-        val url: String
+        val stargazers_count: Int?
     )
 
     data class JsonOwner(

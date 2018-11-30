@@ -1,2 +1,8 @@
 <resources>
+    <string name="repository">Repository</string>
+    <string name="language">Language</string>
+    <string name="stars">Stars</string>
+    <string name="forks">Forks</string>
+    <string name="subscribers">Subscribers</string>
+    <string name="issues">Issues</string>
 </resources>
