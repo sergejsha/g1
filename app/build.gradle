@@ -29,9 +29,9 @@ android {
 
 dependencies {
 
-    // assemble all required modules
+    // assemble required feature modules
     implementation project(":overview-ui")
-    //implementation project(":detail-ui")
+    implementation project(":detail-ui")
 
     // enable leak canary in debug build
     debugImplementation deps.leakCanaryMagnet

@@ -2,4 +2,6 @@ include ':app',
         ':base',
         ':overview',
         ':overview-ui',
+        ':detail',
+        ':detail-ui',
         ':retrofit-github'

@@ -18,7 +18,7 @@ internal class DefaultGithubOverviewApi(
 
 }
 
-private const val UNKNOWN = "unknown"
+private const val UNKNOWN = "---"
 
 private fun JsonRepos.JsonRepo.toRepo(): Repo =
     Repo(
