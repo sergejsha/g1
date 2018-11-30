@@ -12,7 +12,7 @@ import de.halfbit.g1.overview.ui.R
 import magnet.Instance
 import magnet.Scoping
 
-@Instance(type = GalleryItemAdapter::class, scoping = Scoping.DIRECT)
+@Instance(type = GalleryItemAdapter::class, scoping = Scoping.UNSCOPED)
 internal class GalleryItemAdapter(
     private val navigator: Navigator
 ) : RecyclerView.Adapter<GalleryItemViewHolder>() {
@@ -73,7 +73,7 @@ internal class GalleryItemViewHolder(
         language.text = repo.language
         description.text = repo.description
         stars.text = repo.stars.toString()
-        detailPath = "/${repo.author}/${repo.name}"
+        detailPath = "${repo.author}/${repo.name}"
     }
 
 }

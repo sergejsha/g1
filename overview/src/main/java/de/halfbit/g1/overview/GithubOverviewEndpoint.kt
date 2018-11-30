@@ -21,7 +21,7 @@ internal data class JsonRepos(
         val owner: JsonOwner,
         val description: String?,
         val language: String?,
-        val stargazers_count: String?,
+        val stargazers_count: Int?,
         val url: String
     )
 
@@ -32,4 +32,5 @@ internal data class JsonRepos(
 }
 
 @Instance(type = GithubOverviewEndpoint::class)
-internal fun provideGithubOverviewEndpoint(retrofit: Retrofit): GithubOverviewEndpoint = retrofit.create()
+internal fun provideGithubOverviewEndpoint(retrofit: Retrofit)
+        : GithubOverviewEndpoint = retrofit.create()

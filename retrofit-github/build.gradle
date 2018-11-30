@@ -28,6 +28,7 @@ dependencies {
     api deps.retrofit2
     api deps.retrofitMoshi
     api deps.retrofitRxJava
+    api deps.okhttpInterceptor
     api deps.magnetKotlin
     kapt deps.magnetProcessor
 }

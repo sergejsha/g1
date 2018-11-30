@@ -3,17 +3,17 @@ package de.halfbit.g1.overview
 import io.reactivex.Single
 import magnet.Instance
 
-interface GithubOverviewApi {
+interface GithubOverviewSource {
     fun getRepos(page: Int): Single<List<Repo>>
 }
 
-@Instance(type = GithubOverviewApi::class)
-internal class DefaultGithubOverviewApi(
-    private val githubOverviewEndpoint: GithubOverviewEndpoint
-) : GithubOverviewApi {
+@Instance(type = GithubOverviewSource::class)
+internal class DefaultGithubOverviewSource(
+    private val endpoint: GithubOverviewEndpoint
+) : GithubOverviewSource {
 
     override fun getRepos(page: Int): Single<List<Repo>> =
-        githubOverviewEndpoint.getRepos(page)
+        endpoint.getRepos(page)
             .map { it.items.map { jsonRepo -> jsonRepo.toRepo() } }
 
 }
@@ -26,5 +26,5 @@ private fun JsonRepos.JsonRepo.toRepo(): Repo =
         author = owner.login,
         description = description ?: UNKNOWN,
         language = language ?: UNKNOWN,
-        stars = stargazers_count?.toIntOrNull() ?: 0
+        stars = stargazers_count ?: 0
     )

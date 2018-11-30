@@ -44,7 +44,7 @@ interface GithubOverviewService {
 
 @Instance(type = GithubOverviewService::class, disposer = "dispose")
 internal class DefaultGithubOverviewService(
-    private val githubOverviewApi: GithubOverviewApi
+    private val githubOverviewSource: GithubOverviewSource
 ) : GithubOverviewService {
 
     override val state = BehaviorRelay
@@ -75,13 +75,13 @@ internal class DefaultGithubOverviewService(
     private fun loadNextPage(currentState: GithubOverviewService.State): Single<GithubOverviewService.State> =
         when (currentState) {
             is GithubOverviewService.State.Content -> {
-                githubOverviewApi
+                githubOverviewSource
                     .getRepos(currentState.lastPage + 1)
                     .map { it.appendTo(currentState) }
                     .subscribeOn(Schedulers.io())
             }
             else -> {
-                githubOverviewApi
+                githubOverviewSource
                     .getRepos(1)
                     .map { it.toContent() }
                     .subscribeOn(Schedulers.io())
