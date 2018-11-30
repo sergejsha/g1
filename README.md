@@ -3,16 +3,15 @@ This repository contains a demo project, which
 * shows a simple detail view for a repository selected from the list
 
 # Features
-* The demo app is built around [Model-View-Intent][1] pattern.
-* RxJava is used for data binding.
-* Repositories are loaded lazily page-by-page.
-* Activity lifecycle is supported by caching data in memory.
-* Code is written respecting [SOLID principles][2]
+* Architecture: [Model-View-Intent][1] + reactive data binding (using RxJava2).
+* RecyclerView loads data gradually, page by page.
+* Loaded data gets cached in memory and survives aconfiguration changes (no JetPack's ViewModel is used).
+* Code is written in accordance to [SOLID principles][2].
 * Modularisation is done with [dependency inversion principle][3] in mind.
 
 # Architecture
 
-Each application screen is build around the architecture shown in the picture down below and follows the same [Model-View-Intent][1] pattern.
+Each application screen is build around the architecture shown in the diagram below and follows the same [Model-View-Intent][1] pattern.
 
 <img src="documentation/diagrams/architecture.png" width="600" />
 
