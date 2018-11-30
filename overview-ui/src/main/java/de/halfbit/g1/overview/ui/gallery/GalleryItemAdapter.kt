@@ -1,24 +1,29 @@
 package de.halfbit.g1.overview.ui.gallery
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import de.halfbit.g1.base.Navigator
 import de.halfbit.g1.overview.Repo
 import de.halfbit.g1.overview.ui.R
 import magnet.Instance
 import magnet.Scoping
 
 @Instance(type = GalleryItemAdapter::class, scoping = Scoping.DIRECT)
-internal class GalleryItemAdapter : RecyclerView.Adapter<GalleryItemViewHolder>() {
+internal class GalleryItemAdapter(
+    private val navigator: Navigator
+) : RecyclerView.Adapter<GalleryItemViewHolder>() {
 
     private var repos = emptyList<Repo>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         GalleryItemViewHolder(
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.overview_item, parent, false)
+                .inflate(R.layout.overview_item, parent, false),
+            navigator
         )
 
     override fun getItemCount() = repos.size
@@ -38,7 +43,8 @@ internal class GalleryItemAdapter : RecyclerView.Adapter<GalleryItemViewHolder>(
 }
 
 internal class GalleryItemViewHolder(
-    viewRoot: View
+    viewRoot: View,
+    navigator: Navigator
 ) : RecyclerView.ViewHolder(viewRoot) {
 
     private val name = viewRoot.findViewById<TextView>(R.id.name)
@@ -47,12 +53,27 @@ internal class GalleryItemViewHolder(
     private val description = viewRoot.findViewById<TextView>(R.id.description)
     private val stars = viewRoot.findViewById<TextView>(R.id.stars)
 
+    private lateinit var detailPath: String
+
+    init {
+        viewRoot.setOnClickListener {
+            check(::detailPath.isInitialized)
+            navigator.navigate(
+                action = R.id.navigator_action_detail,
+                extras = Bundle().apply {
+                    putString(Navigator.EXTRA_RESOURCE_PATH, detailPath)
+                }
+            )
+        }
+    }
+
     fun bind(repo: Repo) {
         name.text = repo.name
         author.text = repo.author
         language.text = repo.language
         description.text = repo.description
         stars.text = repo.stars.toString()
+        detailPath = "/${repo.author}/${repo.name}"
     }
 
 }

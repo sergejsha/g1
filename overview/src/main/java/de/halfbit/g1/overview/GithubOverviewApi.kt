@@ -22,8 +22,8 @@ private const val UNKNOWN = "---"
 
 private fun JsonRepos.JsonRepo.toRepo(): Repo =
     Repo(
-        name = name ?: UNKNOWN,
-        author = owner.login ?: UNKNOWN,
+        name = name,
+        author = owner.login,
         description = description ?: UNKNOWN,
         language = language ?: UNKNOWN,
         stars = stargazers_count?.toIntOrNull() ?: 0

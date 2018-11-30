@@ -27,6 +27,7 @@ android {
 dependencies {
     api project(":base")
     api project(":detail")
+    api project(":overview-ui")
 
     api deps.constraintLayout
 

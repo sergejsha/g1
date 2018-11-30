@@ -17,15 +17,16 @@ internal data class JsonRepos(
 ) {
 
     data class JsonRepo(
-        val name: String?,
+        val name: String,
         val owner: JsonOwner,
         val description: String?,
         val language: String?,
-        val stargazers_count: String?
+        val stargazers_count: String?,
+        val url: String
     )
 
     data class JsonOwner(
-        val login: String?
+        val login: String
     )
 
 }

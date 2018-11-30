@@ -14,6 +14,7 @@ class G1Activity : AppCompatActivity(), ScopeOwner {
     override val scope: Scope by lazy {
         applicationContext.createSubscope {
             bind(this@G1Activity as Context)
+            bind(supportFragmentManager)
         }
     }
 
@@ -33,7 +34,7 @@ class G1Activity : AppCompatActivity(), ScopeOwner {
         }
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.main_container, fragmentFactory.create())
+            .add(R.id.main_container, fragmentFactory.create())
             .commit()
     }
 

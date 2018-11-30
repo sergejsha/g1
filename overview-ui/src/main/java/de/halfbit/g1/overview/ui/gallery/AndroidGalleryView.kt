@@ -11,6 +11,7 @@ import io.reactivex.Observable
 import io.reactivex.functions.Consumer
 import magnet.Classifier
 import magnet.Instance
+import magnet.Scoping
 
 interface AndroidGalleryView {
 
@@ -20,7 +21,7 @@ interface AndroidGalleryView {
     fun showContent(repos: List<Repo>)
 }
 
-@Instance(type = AndroidGalleryView::class)
+@Instance(type = AndroidGalleryView::class, scoping = Scoping.UNSCOPED)
 internal class DefaultAndroidGalleryView(
     private val galleryItemAdapter: GalleryItemAdapter,
     @Classifier(ROOT) rootView: View

@@ -12,6 +12,7 @@ import de.halfbit.g1.overview.ui.gallery.GalleryView
 import de.halfbit.g1.overview.ui.gallery.GalleryViewModel
 import io.reactivex.disposables.CompositeDisposable
 import magnet.Instance
+import magnet.Scope
 import magnet.bind
 import magnet.getSingle
 
@@ -19,21 +20,19 @@ internal const val ROOT = "root"
 
 class OverviewFragment : Fragment() {
 
-    private val scope by lazy {
-        activity.createSubscope {
-            bind(checkNotNull(view) { "Fragment must return view" }, ROOT)
-            bind(CompositeDisposable())
-        }
-    }
-
     private lateinit var viewManager: ViewManager
+    private var scope: Scope? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.overview_fragment, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewManager = scope.getSingle()
+        scope = activity.createSubscope {
+            bind(checkNotNull(view) { "Fragment must return view" }, ROOT)
+            bind(CompositeDisposable())
+            viewManager = getSingle()
+        }
     }
 
     override fun onStart() {
@@ -44,6 +43,11 @@ class OverviewFragment : Fragment() {
     override fun onPause() {
         viewManager.unbind()
         super.onPause()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        scope = null
     }
 
 }
