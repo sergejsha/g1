@@ -1,0 +1,5 @@
+include ':app',
+        ':base',
+        ':overview',
+        ':overview-ui',
+        ':retrofit-github'

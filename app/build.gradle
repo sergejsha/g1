@@ -1,0 +1,43 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion cfg.compileSdk
+
+    defaultConfig {
+        applicationId "de.halfbit.g1"
+        minSdkVersion cfg.minSdk
+        targetSdkVersion cfg.targetSdk
+        versionCode cfg.versionCode
+        versionName cfg.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+
+    // assemble all required modules
+    implementation project(":overview-ui")
+    //implementation project(":detail-ui")
+
+    // enable leak canary in debug build
+    debugImplementation deps.leakCanaryMagnet
+    debugImplementation deps.leakCanary
+
+    implementation deps.magnetKotlin
+    kapt deps.magnetProcessor
+
+}
