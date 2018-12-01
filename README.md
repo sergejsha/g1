@@ -15,31 +15,29 @@ Each application screen is build around the architecture shown in the diagram be
 
 <img src="documentation/diagrams/architecture.png" width="600" />
 
-*Service* is responcible for performing external operations and delivering data. It leverages Command Query Responsibility Segregation ([CQRS][4]) pattern and is capable of receiving commands and braodcasting state. *View* has an interface, which mirrors the one of the service. It can send events and accept states, which are specific to each view. *ViewModel* is a layer in between, which binds *Views* to *Services* and performs mapping between events/commands and states.
+*Service* is responsible for performing operations and delivering data. It leverages Command Query Responsibility Segregation ([CQRS][4]) pattern and is capable of receiving commands and dispatching state. *View* has own interface, which reflects the one of the service. It can send events and accept states, which are specific to each view. *ViewModel* is the layer in between, binding *Views* and *Services* by mapping events/commands and states.
 
-As you might notice, that *View* is also decoupled from *AndroidView*. They have different responsibilities. *AndroidView* is there to hide complexity of native Android view behind a simple contract. *View* defines proper events/state contract and adapts it to the simplified contract of *AndroidView*.
+As you might notice, the *View* is decoupled from *AndroidView*. They have different responsibilities. *AndroidView* is there to hide complexity of native Android view behind a simpler contract. *View* defines proper events/state contract and adapts it to the simplified contract of *AndroidView*.
 
 # Scoping
 
-While *AndroidView*, *View* and *ViewModel* can be create and destroyed multiple times following the activity lifecycle, *Service* lives in a broader scope and keeps data cached in memory. In this demo services reside in application scope and views reside in fragment scope. Even better option would be to keep services in retained scope, corresponding to the scope of [ViewModel][5] in terms of Android Jetpack.
+While *AndroidView*, *View* and *ViewModel* can be create and destroyed multiple times following the activity lifecycle, *Service* lives in a broader scope and keeps data cached in memory. In this demo app, services reside in application scope and views reside in fragment scope. Even better option would be to keep services in a "retained" scope corresponding to the scope of [ViewModel][5] in terms of Android Jetpack.
 
 <img src="documentation/diagrams/scoping.png" width="600" />
 
 # Packaging
 
-The code in this app is grouped by features in the first place and then devided into modules by scopes. Thus each new implemented application screen will add at least two more modules to the app: `feature` - with UI-agnostic part of feature implementation and `feature-ui` with UI-specific implementation. Dependency goes always out of the UI-specific module.
+The code in this app is grouped by features in the first place and then it is devided into modules by scopes. Thus each new implemented application screen will add at least two more modules to the app: `feature` - with UI-agnostic part of feature implementation and `feature-ui` with UI-specific implementation. Dependency goes always from UI-module to the one containing services.
 
 <img src="documentation/diagrams/packaging.png" width="600" />
 
 # Structure
 
-This application uses [Magnet][6] dependency injection library for enabling dependency inversion. There are two packaging rules to follow:
-* No modules must depend on `app` module.
-* All dependencies comming from the `app` module are *assembly* dependencies. They define the features to include into the apk after the build. Removal of some dependencies will lead to removal of corresponding feature from the build.
+This application could use any library for dependency injection or even no library at all. I have chosen [Magnet][6] dependency injection library because it has simple configuration (there are almost no DI-related classes) and it supports dependency inversion between modules. The only rule I had to follow is to keep `app` module free of code. It is mainly used for *packaging* other modules. Dependencies defined in `app` module define what is included in the built apk. Correspondingly, the other modules must not depend on the `app` module.
 
 <img src="documentation/diagrams/structure.png" width="600" />
 
-Please notice the `debugImplementation` dependency to `leakcanary` in the `app` modules. By declaring this dependency, the app will have `leakcanary` memory leak detection active in debug build. In release build no `leakcanary` library will be included. No code modifications or no-op stubs are needed - the code is just not included in released apk 🔥.
+🔥 Please notice the `debugImplementation` dependencies to the `leakcanary` in the `app` modules. By declaring those dependencies, the app will include `leakcanary` library into debug build, but not into the release build. No code modifications or no-op stubs are needed for that. This is achieved by using magnetx application extension and the adapter for `leakcanary` library.
 
 [1]: https://cycle.js.org/model-view-intent.html
 [2]: https://en.wikipedia.org/wiki/SOLID
