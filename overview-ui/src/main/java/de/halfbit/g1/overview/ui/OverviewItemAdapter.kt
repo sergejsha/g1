@@ -1,4 +1,4 @@
-package de.halfbit.g1.overview.ui.gallery
+package de.halfbit.g1.overview.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,12 +8,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import de.halfbit.g1.base.Navigator
 import de.halfbit.g1.overview.Repo
-import de.halfbit.g1.overview.ui.R
 import magnet.Instance
 import magnet.Scoping
 
-@Instance(type = GalleryItemAdapter::class, scoping = Scoping.UNSCOPED)
-internal class GalleryItemAdapter(
+@Instance(type = OverviewItemAdapter::class, scoping = Scoping.UNSCOPED)
+internal class OverviewItemAdapter(
     private val navigator: Navigator
 ) : RecyclerView.Adapter<GalleryItemViewHolder>() {
 

@@ -4,8 +4,11 @@ import com.google.common.truth.Truth.assertThat
 import com.squareup.moshi.Moshi
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.junit.MockitoJUnitRunner
 
-class GithubOverviewEndpointTest {
+@RunWith(MockitoJUnitRunner.Strict::class)
+class MoshiModelTest {
 
     private lateinit var moshi: Moshi
 

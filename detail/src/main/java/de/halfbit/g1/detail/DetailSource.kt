@@ -3,14 +3,14 @@ package de.halfbit.g1.detail
 import io.reactivex.Single
 import magnet.Instance
 
-interface GithubDetailSource {
+interface DetailSource {
     fun getRepoDetail(resource: String): Single<RepoDetail>
 }
 
-@Instance(type = GithubDetailSource::class)
-internal class DefaultGithubDetailSource(
-    private val endpoint: GithubDetailEndpoint
-) : GithubDetailSource {
+@Instance(type = DetailSource::class)
+internal class DefaultDetailSource(
+    private val endpoint: DetailEndpoint
+) : DetailSource {
 
     override fun getRepoDetail(resource: String): Single<RepoDetail> =
         endpoint.getRepoDetail(resource).map { it.toRepoDetail() }

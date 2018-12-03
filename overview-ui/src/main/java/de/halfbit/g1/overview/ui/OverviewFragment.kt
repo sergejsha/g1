@@ -8,8 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import de.halfbit.g1.base.MainUiFragmentFactory
 import de.halfbit.g1.base.createSubscope
-import de.halfbit.g1.overview.ui.gallery.GalleryView
-import de.halfbit.g1.overview.ui.gallery.GalleryViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import magnet.Instance
@@ -57,13 +55,13 @@ class OverviewFragment : Fragment() {
 
 @Instance(type = ViewManager::class)
 internal class ViewManager(
-    private val galleryView: GalleryView,
-    private val galleryViewModel: GalleryViewModel,
+    private val overviewView: OverviewView,
+    private val overviewViewModel: OverviewViewModel,
     private val compositeDisposable: CompositeDisposable
 ) {
 
     fun bind() {
-        galleryViewModel.bind(galleryView, compositeDisposable)
+        overviewViewModel.bind(overviewView, compositeDisposable)
     }
 
     fun unbind() {

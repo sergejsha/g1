@@ -20,7 +20,7 @@ class Repo(
     val language: String
 )
 
-interface GithubOverviewService {
+interface OverviewService {
 
     sealed class Command {
         object LoadNextPage : Command()
@@ -37,17 +37,17 @@ interface GithubOverviewService {
 
 }
 
-@Instance(type = GithubOverviewService::class, disposer = "dispose")
-internal class DefaultGithubOverviewService(
-    private val githubOverviewSource: GithubOverviewSource
-) : GithubOverviewService {
+@Instance(type = OverviewService::class, disposer = "dispose")
+internal class DefaultOverviewService(
+    private val overviewSource: OverviewSource
+) : OverviewService {
 
     override val state = BehaviorRelay
-        .createDefault<GithubOverviewService.State>(GithubOverviewService.State.Empty)
+        .createDefault<OverviewService.State>(OverviewService.State.Empty)
         .toSerialized()
 
     override val command = PublishRelay
-        .create<GithubOverviewService.Command>()
+        .create<OverviewService.Command>()
         .toSerialized()
 
     private val disposables = CompositeDisposable()
@@ -55,29 +55,29 @@ internal class DefaultGithubOverviewService(
     init {
 
         disposables += command
-            .ofType<GithubOverviewService.Command.LoadNextPage>()
+            .ofType<OverviewService.Command.LoadNextPage>()
             .withLatestFrom(state)
             .flatMapSingle { loadNextPage(it.second) }
             .subscribe(state)
 
-        command.accept(GithubOverviewService.Command.LoadNextPage)
+        command.accept(OverviewService.Command.LoadNextPage)
     }
 
-    private fun loadNextPage(currentState: GithubOverviewService.State): Single<GithubOverviewService.State> {
+    private fun loadNextPage(currentState: OverviewService.State): Single<OverviewService.State> {
         val source = when (currentState) {
-            is GithubOverviewService.State.Content ->
-                githubOverviewSource
+            is OverviewService.State.Content ->
+                overviewSource
                     .getRepos(currentState.lastPage + 1)
                     .map { it.appendTo(currentState) }
             else ->
-                githubOverviewSource
+                overviewSource
                     .getRepos(1)
                     .map { it.toContent() }
         }
         return source
             .onErrorReturn { err: Throwable ->
                 err.printStackTrace()
-                GithubOverviewService.State.Error(err)
+                OverviewService.State.Error(err)
             }
             .subscribeOn(Schedulers.io())
     }
@@ -88,13 +88,13 @@ internal class DefaultGithubOverviewService(
 
 }
 
-private fun List<Repo>.toContent(): GithubOverviewService.State =
-    GithubOverviewService.State.Content(
+private fun List<Repo>.toContent(): OverviewService.State =
+    OverviewService.State.Content(
         lastPage = 1,
         repos = this
     )
 
-private fun List<Repo>.appendTo(currentState: GithubOverviewService.State.Content): GithubOverviewService.State =
+private fun List<Repo>.appendTo(currentState: OverviewService.State.Content): OverviewService.State =
     currentState.copy(
         lastPage = currentState.lastPage + 1,
         repos = currentState.repos.toMutableList().also { it.addAll(this) }

@@ -1,4 +1,4 @@
-package de.halfbit.g1.overview.ui.gallery
+package de.halfbit.g1.overview.ui
 
 import android.view.View
 import android.widget.ProgressBar
@@ -7,15 +7,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxrelay2.PublishRelay
 import de.halfbit.g1.overview.Repo
-import de.halfbit.g1.overview.ui.R
-import de.halfbit.g1.overview.ui.ROOT
 import io.reactivex.Observable
 import io.reactivex.functions.Consumer
 import magnet.Classifier
 import magnet.Instance
 import magnet.Scoping
 
-interface AndroidGalleryView {
+interface AndroidOverviewView {
 
     val nextPageRequests: Observable<Unit>
 
@@ -23,11 +21,11 @@ interface AndroidGalleryView {
     fun showContent(repos: List<Repo>)
 }
 
-@Instance(type = AndroidGalleryView::class, scoping = Scoping.UNSCOPED)
-internal class DefaultAndroidGalleryView(
-    private val galleryItemAdapter: GalleryItemAdapter,
+@Instance(type = AndroidOverviewView::class, scoping = Scoping.UNSCOPED)
+internal class DefaultAndroidOverviewView(
+    private val overviewItemAdapter: OverviewItemAdapter,
     @Classifier(ROOT) rootView: View
-) : AndroidGalleryView {
+) : AndroidOverviewView {
 
     override val nextPageRequests = PublishRelay.create<Unit>().toSerialized()
 
@@ -50,7 +48,7 @@ internal class DefaultAndroidGalleryView(
             progress.visibility = View.GONE
         }
 
-        val adapter = recycler.adapter as? GalleryItemAdapter ?: galleryItemAdapter
+        val adapter = recycler.adapter as? OverviewItemAdapter ?: overviewItemAdapter
         adapter.setRepos(repos)
         lazyPager.loading = false
 

@@ -21,7 +21,7 @@ class RepoDetail(
     val issues: Int
 )
 
-interface GithubDetailService {
+interface DetailService {
 
     class LoadDetailCommand(val resource: String)
 
@@ -35,20 +35,20 @@ interface GithubDetailService {
     val command: Consumer<LoadDetailCommand>
 }
 
-@Instance(type = GithubDetailService::class, disposer = "dispose")
-internal class DefaultGithubDetailService(
-    private val githubDetailSource: GithubDetailSource
-) : GithubDetailService {
+@Instance(type = DetailService::class, disposer = "dispose")
+internal class DefaultDetailService(
+    private val detailSource: DetailSource
+) : DetailService {
 
-    override val state = BehaviorRelay.create<GithubDetailService.State>().toSerialized()
-    override val command = PublishRelay.create<GithubDetailService.LoadDetailCommand>().toSerialized()
+    override val state = BehaviorRelay.create<DetailService.State>().toSerialized()
+    override val command = PublishRelay.create<DetailService.LoadDetailCommand>().toSerialized()
 
     private val disposables = CompositeDisposable()
 
     init {
 
         val loading = command
-            .map { GithubDetailService.State.Processing }
+            .map { DetailService.State.Processing }
 
         val content = command
             .flatMapSingle { loadResourceDetail(it.resource) }
@@ -59,13 +59,13 @@ internal class DefaultGithubDetailService(
 
     }
 
-    private fun loadResourceDetail(resource: String): Single<GithubDetailService.State> =
-        githubDetailSource
+    private fun loadResourceDetail(resource: String): Single<DetailService.State> =
+        detailSource
             .getRepoDetail(resource)
-            .map { GithubDetailService.State.Content(repo = it) as GithubDetailService.State }
+            .map { DetailService.State.Content(repo = it) as DetailService.State }
             .onErrorReturn { err: Throwable ->
                 err.printStackTrace()
-                GithubDetailService.State.Error(err)
+                DetailService.State.Error(err)
             }
             .subscribeOn(Schedulers.io())
 
