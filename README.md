@@ -37,7 +37,7 @@ This application could use any library for dependency injection or even no libra
 
 <img src="documentation/diagrams/structure.png" width="600" />
 
-🔥 Please notice the `debugImplementation` dependencies to the `leakcanary` in the `app` modules. By declaring those dependencies, the app will include `leakcanary` library into debug build, but not into the release build. No code modifications or no-op stubs are needed for that. This is achieved by using magnetx application extension and the adapter for `leakcanary` library.
+🔥 Notice the `debugImplementation` dependencies to the `leakcanary` in the `app` modules. By declaring those dependencies, the app will include `leakcanary` library into debug build, but not into the release build. No code modifications or no-op stubs are needed for that. This is achieved by using magnetx application extension and the adapter for `leakcanary` library.
 
 [1]: https://cycle.js.org/model-view-intent.html
 [2]: https://en.wikipedia.org/wiki/SOLID
