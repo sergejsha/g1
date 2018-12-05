@@ -33,7 +33,7 @@ The code in this app is grouped by features in the first place and then it is de
 
 # Structure
 
-This application could use any library for dependency injection or even no library at all. I have chosen [Magnet][6] dependency injection library because it has simple configuration (there are almost no DI-related classes) and it supports dependency inversion between modules. The only rule I had to follow is to keep `app` module free of code. It is mainly used for *packaging* other modules. Dependencies defined in `app` module define what is included in the built apk. Correspondingly, the other modules must not depend on the `app` module.
+This application could use any library for dependency injection or even no library at all. I have chosen [Magnet][6] dependency injection library because it has simple configuration (there are almost no DI-related classes) and it supports dependency inversion between modules. The only rule I had to follow was to keep `app` module free of code. It is mainly used for *assembling* other modules. Dependencies defined in `app` module define what is included in the resulting apk. Correspondingly, the other modules must not depend on the `app` module.
 
 <img src="documentation/diagrams/structure.png" width="600" />
 
