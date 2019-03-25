@@ -17,11 +17,6 @@ android {
             consumerProguardFiles 'proguard-rules.pro'
         }
     }
-
-    libraryVariants.all {
-        it.generateBuildConfig.enabled = false
-    }
-
 }
 
 dependencies {
